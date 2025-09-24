@@ -100,3 +100,6 @@ InitTestScene*.unity*
 
 # VSCode
 .vscode/
+
+# JetBrains
+.idea/
