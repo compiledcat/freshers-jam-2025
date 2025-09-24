@@ -1,15 +1,12 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    public PlayerInput PlayerInput;
+    
     private uint lives = 3;
-    public bool hasFinishedLevel;
-
-
-    private void Start()
-    {
-        hasFinishedLevel = false;
-    }
+    public bool hasFinishedLevel = false;
 
     public void DecrementLife()
     {

@@ -4,25 +4,41 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+    public static PlayerManager Instance { get; private set; }
+
     [SerializeField] private PlayerInputManager _playerInputManager;
-    public Dictionary<PlayerInput, Player> Players = new();
+    public List<Player> Players = new();
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("Multiple instances of PlayerManager");
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+
         _playerInputManager.playerJoinedEvent.AddListener(OnPlayerJoined);
         _playerInputManager.playerLeftEvent.AddListener(OnPlayerLeft);
     }
 
     private void OnPlayerJoined(PlayerInput playerInput)
     {
-        var player = new Player();
-        Players.Add(playerInput, player);
-        Debug.Log("player joined: device " + playerInput.devices[0].description.manufacturer);
+        Players.Add(playerInput.GetComponent<Player>());
+        Debug.Log($"player {playerInput.playerIndex} joined");
+        if (Players.Count == 2)
+        {
+            GameManager.Instance.StartGame();
+        }
     }
 
     private void OnPlayerLeft(PlayerInput playerInput)
     {
-        Players.Remove(playerInput);
+        Players.Remove(playerInput.GetComponent<Player>());
+        Debug.Log($"player {playerInput.playerIndex} left");
     }
 
     private void OnDestroy()

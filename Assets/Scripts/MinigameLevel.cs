@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MinigameLevel : MonoBehaviour
 {
-    public PlayerInput PlayerInput;
+    public string Title;
+    public Player Player;
 }
