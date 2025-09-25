@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class TimeManager : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class TimeManager : MonoBehaviour
 
     private const uint levelsPerSpeedup = 4; //The reset value that levelsToNextSpeedup gets set to when there is a speedup
 
+    [SerializeField] private TextMeshProUGUI _timeText;
+
+    private bool _inPlay = false;
 
     public void AdvanceLevel()
     {
@@ -29,19 +33,27 @@ public class TimeManager : MonoBehaviour
         timeToNextLevel = currentTimePerLevel;
     }
 
-
     private void Start()
     {
         currentTimePerLevel = startTimePerLevel;
         timeToNextLevel = currentTimePerLevel;
+
+        GameManager.Instance.AddGameStartListener(() =>
+        {
+            _inPlay = true;
+        });
     }
 
 
     private void Update()
     {
+        if (!_inPlay) return;
+
         timeToNextLevel -= Time.deltaTime;
+        _timeText.text = timeToNextLevel.ToString("F1");
         if (timeToNextLevel <= 0)
         {
+            _inPlay = false;
             GameManager.Instance.AdvanceLevel();
             AdvanceLevel();
         }

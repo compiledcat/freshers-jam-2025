@@ -9,9 +9,15 @@ namespace Minigames
 
         private void Update()
         {
+            if (!_level.InPlay || _level.Player.HasFinishedLevel) return;
+
             var pi = _level.Player.PlayerInput;
             var move = pi.actions["Move"].ReadValue<Vector2>();
             _playerTransform.Translate(move * (Time.deltaTime * 5));
+            _playerTransform.localPosition = new Vector3(
+                Mathf.Clamp(_playerTransform.localPosition.x, GameManager.Instance.LevelSize.x * -0.5f, GameManager.Instance.LevelSize.x * 0.5f),
+                Mathf.Clamp(_playerTransform.localPosition.y, GameManager.Instance.LevelSize.y * -0.5f, GameManager.Instance.LevelSize.y * 0.5f),
+                _playerTransform.localPosition.z);
         }
     }
 }

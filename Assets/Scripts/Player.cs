@@ -6,7 +6,14 @@ public class Player : MonoBehaviour
     public PlayerInput PlayerInput;
     
     private uint lives = 3;
-    public bool hasFinishedLevel = false;
+    private bool hasFinishedLevel = false;
+
+    public bool HasFinishedLevel => hasFinishedLevel;
+
+    public void FinishLevel()
+    {
+        hasFinishedLevel = true;
+    }
 
     public void DecrementLife()
     {
@@ -15,5 +22,18 @@ public class Player : MonoBehaviour
         {
             //die
         }
+    }
+
+    public bool IsAlive()
+    {
+        return lives > 0;
+    }
+
+    private void Start()
+    {
+        GameManager.Instance.AddGameStartListener(() =>
+        {
+            hasFinishedLevel = false;
+        });
     }
 }
