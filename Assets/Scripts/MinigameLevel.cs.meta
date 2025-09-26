@@ -1,2 +1,17 @@
 fileFormatVersion: 2
 guid: c715d868f608e6b4794ddc6d8b4b7904
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - LeftTexture: {fileID: 8400000, guid: 93724e7fb6a156945aa7d9325e5b3a9a, type: 2}
+  - RightTexture: {fileID: 8400000, guid: 21c7747dddd5ec842acba7bf59101368, type: 2}
+  - LeftTextureBackup: {fileID: 8400000, guid: 05420c490526151428f4c7d0b001601a, type: 2}
+  - RightTextureBackup: {fileID: 8400000, guid: c053a3ac5f456a44c90d3ed3aaa4e635, type: 2}
+  - _levelCam: {instanceID: 0}
+  - Player: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

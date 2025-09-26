@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public PlayerInput PlayerInput;
+
+    public Transform _livesDisplay;
     
     private uint lives = 3;
     private bool hasFinishedLevel = false;
@@ -18,16 +20,10 @@ public class Player : MonoBehaviour
     public void DecrementLife()
     {
         --lives;
-        if (lives == 0)
-        {
-            //die
-        }
+        Destroy(_livesDisplay.GetChild(0).gameObject);
     }
 
-    public bool IsAlive()
-    {
-        return lives > 0;
-    }
+    public bool IsAlive => lives > 0;
 
     private void Start()
     {

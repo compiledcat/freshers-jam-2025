@@ -7,6 +7,14 @@ namespace Minigames
         [SerializeField] private MinigameLevel _level;
         [SerializeField] private Transform _playerTransform;
 
+        private void Start()
+        {
+            GameManager.Instance.AddGameEndListener(() =>
+            {
+                _level.Player.FinishLevel();
+            });
+        }
+
         private void Update()
         {
             if (!_level.InPlay || _level.Player.HasFinishedLevel) return;

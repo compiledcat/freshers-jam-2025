@@ -8,15 +8,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [SerializeField] private List<MinigameLevel> levels;
+    [SerializeField] private List<MinigameSO> _levels;
     private Camera _cam;
 
     [SerializeField] private TextMeshProUGUI _levelTitleText;
+    [SerializeField] private ControlsVisualiser _controlsVisualiser;
+    [SerializeField] private RectTransform _introductionBox, _mainViewport, _backupViewport;
 
     private readonly List<MinigameLevel> _activeLevels = new();
 
-    private readonly UnityEvent _onGameStart = new();
-    private readonly UnityEvent _onGameEnd = new();
+    private readonly UnityEvent _onGameStart = new(); // timer begins
+    private readonly UnityEvent _onGameEnd = new(); // timer ends, player controls stop, games could check if player completed objective
 
     public readonly Vector2 LevelSize = new(8, 9);
 
@@ -46,9 +48,10 @@ public class GameManager : MonoBehaviour
             {
                 p.DecrementLife();
 
-                if (!p.IsAlive())
+                if (!p.IsAlive)
                 {
                     // todo: player death
+                    Application.Quit();
                 }
             }
         }
@@ -60,30 +63,31 @@ public class GameManager : MonoBehaviour
 
     private void SetupLevels()
     {
-        var randomLevel = levels[Random.Range(0, levels.Count)];
-
+        List<GameObject> levelsToDestroy = new();
         for (var i = _activeLevels.Count - 1; i >= 0; i--)
         {
             var thisLevel = _activeLevels[i]; // capture before levels are cleared
-            Sequence.Create()
-                .Group(Tween.PositionY(thisLevel.transform, _cam.orthographicSize * 2, 1.0f, Ease.OutCubic))
-                .ChainCallback(() => Destroy(thisLevel.gameObject));
+            thisLevel.transform.position = new Vector3(transform.position.x, -transform.position.y);
+            thisLevel.SetCameraTexture(i == 0 ? MinigameLevel.CameraTexture.BackupLeft : MinigameLevel.CameraTexture.BackupRight);
+            levelsToDestroy.Add(thisLevel.gameObject);
         }
         _activeLevels.Clear();
 
-        var screenWidth = _cam.orthographicSize * 2 * _cam.aspect;
+        var randomLevel = _levels[Random.Range(0, _levels.Count)];
         for (var i = 0; i < PlayerManager.Instance.Players.Count; i++)
         {
             var player = PlayerManager.Instance.Players[i];
 
-            var level = Instantiate(randomLevel);
+            var level = Instantiate(randomLevel.linkedMinigame);
             if (i == 0)
             {
-                level.transform.position = new Vector3(screenWidth * -0.25f, -_cam.orthographicSize * 2, 0);
+                level.transform.position = new Vector3(-8, -9, 0);
+                level.SetCameraTexture(MinigameLevel.CameraTexture.Left);
             }
             else if (i == 1)
             {
-                level.transform.position = new Vector3(screenWidth * 0.25f, -_cam.orthographicSize * 2, 0);
+                level.transform.position = new Vector3(8, -9, 0);
+                level.SetCameraTexture(MinigameLevel.CameraTexture.Right);
             }
             else
             {
@@ -91,21 +95,33 @@ public class GameManager : MonoBehaviour
             }
 
             level.Player = player;
-            Tween.PositionY(level.transform, 0, 1.0f, Ease.OutCubic, startDelay: 2.0f);
             _activeLevels.Add(level);
         }
 
-        _levelTitleText.text = randomLevel.Title;
-        _levelTitleText.rectTransform.anchoredPosition -= new Vector2(0, Screen.height);
+        float positionOffset = 1920 * Screen.height / Screen.width;
+        _levelTitleText.text = randomLevel.title;
+        _introductionBox.anchoredPosition = new Vector2(0, -positionOffset);
+        _backupViewport.anchoredPosition = _mainViewport.anchoredPosition;
+        _mainViewport.anchoredPosition = new Vector2(0, -positionOffset);
         Sequence.Create()
-            // from below to screen center
-            .Group(Tween.UIAnchoredPositionY(_levelTitleText.rectTransform, 0, 1.0f, Ease.OutCubic))
-            // from screen center to above
+            // Carousel Up
+            .Group(Tween.UIAnchoredPositionY(_backupViewport, positionOffset, 1.0f, Ease.OutCubic)) // from screen center to above
+            .Group(Tween.UIAnchoredPositionY(_introductionBox, 0, 1.0f, Ease.OutCubic)) // from below to screen center
+            
+            .ChainCallback(() => {
+                _controlsVisualiser.currentState = randomLevel.ControlState;
+                _controlsVisualiser.StartFlash();
+                foreach (var lvl in levelsToDestroy)
+                {
+                    Destroy(lvl);
+                }
+            })
             .ChainDelay(1.0f)
-            .Chain(Tween.UIAnchoredPositionY(
-                _levelTitleText.rectTransform,
-                _levelTitleText.rectTransform.anchoredPosition.y + Screen.height * 2, 1.0f, Ease.OutCubic
-            ))
+
+            // Carousel Up Again
+            .Chain(Tween.UIAnchoredPositionY(_introductionBox, positionOffset, 1.0f, Ease.OutCubic))
+            .Group(Tween.UIAnchoredPositionY(_mainViewport, 0, 1.0f, Ease.OutCubic)) // from below to screen center
+
             .ChainCallback(() => { _onGameStart.Invoke(); });
     }
 

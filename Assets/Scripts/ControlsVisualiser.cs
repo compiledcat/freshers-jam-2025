@@ -23,6 +23,14 @@ public class ControlsVisualiser : MonoBehaviour
 
     public List<Image> controlImages;
 
+    private void Awake()
+    {
+        foreach (var img in controlImages)
+        {
+            img.gameObject.SetActive(false);
+        }
+    }
+
     public ControlState currentState = ControlState.None;
 
     [ContextMenu("Start Flash")]

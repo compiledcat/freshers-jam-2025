@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance { get; private set; }
 
     [SerializeField] private PlayerInputManager _playerInputManager;
+    [SerializeField] private Transform _livesDisplayL, _livesDisplayR;
     public List<Player> Players = new();
 
     private void Awake()
@@ -29,6 +30,9 @@ public class PlayerManager : MonoBehaviour
     {
         Players.Add(playerInput.GetComponent<Player>());
         Debug.Log($"player {playerInput.playerIndex} joined");
+
+        playerInput.GetComponent<Player>()._livesDisplay = playerInput.playerIndex == 0 ? _livesDisplayL : _livesDisplayR;
+
         if (Players.Count == 2)
         {
             GameManager.Instance.StartGame();
