@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6886a1ec1d13e504182f4dc6fbf08ef0, type: 3}
-  m_Name: DoSomethingMinigame
+  m_Name: SwimMinigame
   m_EditorClassIdentifier: 
-  title: Move!
-  ControlState: 4
-  linkedMinigame: {fileID: 4365774444280684245, guid: aca393c37deabee4da095b7b160e4492, type: 3}
+  title: Swim!
+  ControlState: 3
+  linkedMinigame: {fileID: 2845566190211419068, guid: 39eb0e3f7d189d3498d0e2e1a00c4f99, type: 3}

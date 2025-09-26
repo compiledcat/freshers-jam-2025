@@ -6,12 +6,14 @@ namespace Minigames
     {
         [SerializeField] private MinigameLevel _level;
         [SerializeField] private Transform _playerTransform;
+        bool _didSomething = false;
 
         private void Start()
         {
             GameManager.Instance.AddGameEndListener(() =>
             {
-                _level.Player.FinishLevel();
+                if (_didSomething)
+                    _level.Player.FinishLevel();
             });
         }
 
@@ -21,6 +23,13 @@ namespace Minigames
 
             var pi = _level.Player.PlayerInput;
             var move = pi.actions["Move"].ReadValue<Vector2>();
+
+            if (move == Vector2.zero)
+            {
+                return;
+            }
+
+            _didSomething = true;
             _playerTransform.Translate(move * (Time.deltaTime * 5));
             _playerTransform.localPosition = new Vector3(
                 Mathf.Clamp(_playerTransform.localPosition.x, GameManager.Instance.LevelSize.x * -0.5f, GameManager.Instance.LevelSize.x * 0.5f),

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private List<MinigameSO> _levels;
+    private Stack<MinigameSO> _levelsOrder = new();
     private Camera _cam;
 
     [SerializeField] private TextMeshProUGUI _levelTitleText;
@@ -51,7 +52,13 @@ public class GameManager : MonoBehaviour
                 if (!p.IsAlive)
                 {
                     // todo: player death
+#if UNITY_STANDALONE
                     Application.Quit();
+#endif
+#if UNITY_EDITOR
+                    // Quit doesn't work in editor
+                    UnityEditor.EditorApplication.isPlaying = false;
+#endif
                 }
             }
         }
@@ -73,7 +80,21 @@ public class GameManager : MonoBehaviour
         }
         _activeLevels.Clear();
 
-        var randomLevel = _levels[Random.Range(0, _levels.Count)];
+        // Guarantee all levels are played once before any are repeated
+        if (_levelsOrder.Count == 0)
+        {
+            var shuffledLevels = new List<MinigameSO>(_levels);
+            for (int i = 0; i < shuffledLevels.Count; i++)
+            {
+                var temp = shuffledLevels[i];
+                int randomIndex = Random.Range(i, shuffledLevels.Count);
+                shuffledLevels[i] = shuffledLevels[randomIndex];
+                shuffledLevels[randomIndex] = temp;
+            }
+            _levelsOrder = new Stack<MinigameSO>(shuffledLevels);
+        }
+        var randomLevel = _levelsOrder.Pop();
+
         for (var i = 0; i < PlayerManager.Instance.Players.Count; i++)
         {
             var player = PlayerManager.Instance.Players[i];
