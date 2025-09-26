@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         for (var i = _activeLevels.Count - 1; i >= 0; i--)
         {
             var thisLevel = _activeLevels[i]; // capture before levels are cleared
-            thisLevel.transform.position = new Vector3(transform.position.x, -transform.position.y);
+            thisLevel.transform.position = new Vector3(thisLevel.transform.position.x, -thisLevel.transform.position.y);
             thisLevel.SetCameraTexture(i == 0 ? MinigameLevel.CameraTexture.BackupLeft : MinigameLevel.CameraTexture.BackupRight);
             levelsToDestroy.Add(thisLevel.gameObject);
         }
@@ -81,12 +81,12 @@ public class GameManager : MonoBehaviour
             var level = Instantiate(randomLevel.linkedMinigame);
             if (i == 0)
             {
-                level.transform.position = new Vector3(-8, -9, 0);
+                level.transform.position = new Vector3(-LevelSize.x, -LevelSize.y, 0) * 100;
                 level.SetCameraTexture(MinigameLevel.CameraTexture.Left);
             }
             else if (i == 1)
             {
-                level.transform.position = new Vector3(8, -9, 0);
+                level.transform.position = new Vector3(LevelSize.x, -LevelSize.y, 0) * 100;
                 level.SetCameraTexture(MinigameLevel.CameraTexture.Right);
             }
             else
