@@ -32,8 +32,8 @@ namespace Minigames
             _didSomething = true;
             _playerTransform.Translate(move * (Time.deltaTime * 5));
             _playerTransform.localPosition = new Vector3(
-                Mathf.Clamp(_playerTransform.localPosition.x, GameManager.Instance.LevelSize.x * -0.5f, GameManager.Instance.LevelSize.x * 0.5f),
-                Mathf.Clamp(_playerTransform.localPosition.y, GameManager.Instance.LevelSize.y * -0.5f, GameManager.Instance.LevelSize.y * 0.5f),
+                Mathf.Clamp(_playerTransform.localPosition.x, GameManager.LevelSize.x * -0.5f, GameManager.LevelSize.x * 0.5f),
+                Mathf.Clamp(_playerTransform.localPosition.y, GameManager.LevelSize.y * -0.5f, GameManager.LevelSize.y * 0.5f),
                 _playerTransform.localPosition.z);
         }
     }

@@ -16,7 +16,7 @@ public class SheepScript : MonoBehaviour
             rig.linearVelocity = runSpeed * dir;
             
             // turn to face running direction
-            transform.localScale = new Vector3(Mathf.Sign(dir.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(-Mathf.Sign(dir.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
     }
 }

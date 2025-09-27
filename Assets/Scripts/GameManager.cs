@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<MinigameSO> _levels;
     private Stack<MinigameSO> _levelsOrder = new();
-    private Camera _cam;
 
     [SerializeField] private TextMeshProUGUI _levelTitleText;
     [SerializeField] private ControlsVisualiser _controlsVisualiser;
@@ -21,7 +20,7 @@ public class GameManager : MonoBehaviour
     private readonly UnityEvent _onGameStart = new(); // timer begins
     private readonly UnityEvent _onGameEnd = new(); // timer ends, player controls stop, games could check if player completed objective
 
-    public readonly Vector2 LevelSize = new(8, 9);
+    public static readonly Vector2 LevelSize = new(8, 9);
 
     private void Awake()
     {
@@ -34,8 +33,6 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        _cam = Camera.main;
     }
 
 

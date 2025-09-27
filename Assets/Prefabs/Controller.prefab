@@ -213,12 +213,11 @@ MonoBehaviour:
   - {fileID: 6884376299529826583}
   - {fileID: 1356269221102870684}
   - {fileID: 8703137202143412309}
-  - {fileID: 8487743668591105970}
   - {fileID: 4566172097280235644}
   - {fileID: 2796607941110863071}
   - {fileID: 2729336054759252894}
   - {fileID: 8487743668591105970}
-  currentState: 120
+  currentState: 8
 --- !u!1 &2538827903042383838
 GameObject:
   m_ObjectHideFlags: 0

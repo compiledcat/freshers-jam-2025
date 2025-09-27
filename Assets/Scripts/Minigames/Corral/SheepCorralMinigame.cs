@@ -44,7 +44,7 @@ namespace Minigames
 
             var pi = _level.Player.PlayerInput;
             var move = pi.actions["Move"].ReadValue<Vector2>();
-            _playerRig.transform.localScale = new Vector3(Mathf.Sign(move.x) * Mathf.Abs(_playerRig.transform.localScale.x),
+            _playerRig.transform.localScale = new Vector3(-Mathf.Sign(move.x) * Mathf.Abs(_playerRig.transform.localScale.x),
                 _playerRig.transform.localScale.y, _playerRig.transform.localScale.z);
             _playerRig.linearVelocity = move * _runSpeed;
         }
